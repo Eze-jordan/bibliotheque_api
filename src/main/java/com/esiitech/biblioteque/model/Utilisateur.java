@@ -7,7 +7,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "utilisateurs")
+@Table(
+        name = "utilisateurs",
+        uniqueConstraints = {@UniqueConstraint(columnNames = "email")}  // Garantit l'unicité au niveau BD
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,7 +27,8 @@ public class Utilisateur {
     @Column(unique = true, nullable = false)
     private String email;
 
-    private String motDePasse;  // Sera chiffré avec BCrypt
+    @Column(nullable = false)
+    private String motDePasse;  // Stocké en BCrypt
 
     public Long getId() {
         return id;
@@ -75,8 +79,10 @@ public class Utilisateur {
     }
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Emprunt> emprunts = new HashSet<>();  // Initialisation pour éviter les `null`
+    @Builder.Default
+    private Set<Emprunt> emprunts = new HashSet<>();
 }
