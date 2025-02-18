@@ -31,6 +31,9 @@ public class JwtUtil {
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+    public String extractRole(String token) {
+        return (String) extractClaim(token, claims -> claims.get("role"));
+    }
 
     public boolean validateToken(String token, String email) {
         return (extractEmail(token).equals(email)) && !isTokenExpired(token);
@@ -40,7 +43,7 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public  <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
