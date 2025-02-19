@@ -3,6 +3,7 @@ package com.esiitech.biblioteque.controller;
 import com.esiitech.biblioteque.dto.EmpruntDTO;
 import com.esiitech.biblioteque.service.EmpruntService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,14 +26,16 @@ public class EmpruntController {
     }
 
     // Récupérer tous les emprunts
-    @GetMapping
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<EmpruntDTO>> getTousEmprunts() {
         List<EmpruntDTO> emprunts = empruntService.getTousEmprunts();
         return ResponseEntity.ok(emprunts);
     }
 
     // Récupérer un emprunt par son ID
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EmpruntDTO> getEmpruntParId(@PathVariable Long id) {
         EmpruntDTO emprunt = empruntService.getEmpruntParId(id);
         return ResponseEntity.ok(emprunt);

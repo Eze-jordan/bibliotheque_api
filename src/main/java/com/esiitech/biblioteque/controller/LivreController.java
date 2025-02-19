@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/livres")
-@PreAuthorize("hasRole('ADMIN')")
 public class LivreController {
 
     private final LivreService livreService;
@@ -19,38 +18,40 @@ public class LivreController {
         this.livreService = livreService;
     }
 
-    // Ajouter un nouveau livre
-    @PostMapping
+    // 🔒 Seuls les ADMIN peuvent ajouter un livre
+    @PostMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LivreDTO> ajouterLivre(@RequestBody LivreDTO livreDTO) {
         LivreDTO createdLivre = livreService.ajouterLivre(livreDTO);
         return ResponseEntity.ok(createdLivre);
     }
 
-    // Récupérer tous les livres
-    @GetMapping("/api/livres/user")
+    // 🔓 Tous les utilisateurs peuvent voir les livres
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<LivreDTO>> getTousLivres() {
         List<LivreDTO> livres = livreService.getTousLivres();
         return ResponseEntity.ok(livres);
     }
 
-    // Récupérer un livre par son ID
+    // 🔓 Tous les utilisateurs peuvent voir un livre par ID
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<LivreDTO> getLivreParId(@PathVariable Long id) {
         LivreDTO livre = livreService.getLivreParId(id);
         return ResponseEntity.ok(livre);
     }
 
-    // Modifier un livre
-    @PutMapping("/{id}")
+    // 🔒 Seuls les ADMIN peuvent modifier un livre
+    @PutMapping("/admin/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LivreDTO> modifierLivre(@PathVariable Long id, @RequestBody LivreDTO livreDTO) {
         LivreDTO updatedLivre = livreService.modifierLivre(id, livreDTO);
         return ResponseEntity.ok(updatedLivre);
     }
 
-    // Supprimer un livre
-    @DeleteMapping("/{id}")
+    // 🔒 Seuls les ADMIN peuvent supprimer un livre
+    @DeleteMapping("/admin/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> supprimerLivre(@PathVariable Long id) {
         livreService.supprimerLivre(id);
