@@ -2,6 +2,7 @@ package com.esiitech.biblioteque.controller;
 
 import com.esiitech.biblioteque.dto.LivreDTO;
 import com.esiitech.biblioteque.service.LivreService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class LivreController {
 
     // 🔒 Seuls les ADMIN peuvent ajouter un livre
     @PostMapping("/admin")
+    @Tag(name = "ajouter livre", description = "exemple")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LivreDTO> ajouterLivre(@RequestBody LivreDTO livreDTO) {
         LivreDTO createdLivre = livreService.ajouterLivre(livreDTO);

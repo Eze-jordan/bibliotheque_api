@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/utilisateurs")
 @PreAuthorize("hasRole('ADMIN')")
+
 @Tag(name = "Livres", description = "Gestion des livres")  // 📌 Catégorie dans Swagger
 public class UtilisateurController {
 
